@@ -1,9 +1,9 @@
 ﻿using RestWithASPNET5Udemy.Model;
 using System.Collections.Generic;
 
-namespace RestWithASPNET5Udemy.Services.Implementations
+namespace RestWithASPNET5Udemy.Business
 {
-    public interface IPersonService
+    public interface IPersonBusiness
     {
         Person Create(Person person);
 
