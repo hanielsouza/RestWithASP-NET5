@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using RestWithASPNET5Udemy.Model;
 using RestWithASPNET5Udemy.Business;
+using RestWithASPNET5Udemy.Data.VO;
 
 namespace RestWithASPNET5Udemy.Controllers
 {
@@ -36,7 +37,7 @@ namespace RestWithASPNET5Udemy.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Person person)
+        public IActionResult Post([FromBody] PersonVO person)
         {
 
             if (person == null) return BadRequest();
@@ -44,7 +45,7 @@ namespace RestWithASPNET5Udemy.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Person person)
+        public IActionResult Put([FromBody] PersonVO person)
         {
 
             if (person == null) return BadRequest();

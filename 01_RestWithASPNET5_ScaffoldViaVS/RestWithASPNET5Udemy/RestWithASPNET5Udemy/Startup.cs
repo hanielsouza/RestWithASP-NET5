@@ -8,7 +8,7 @@ using RestWithASPNET5Udemy.Business;
 using RestWithASPNET5Udemy.Business.Implementations;
 using RestWithASPNET5Udemy.Model.context;
 using RestWithASPNET5Udemy.Repository;
-using RestWithASPNET5Udemy.Repository.Implementations;
+using RestWithASPNET5Udemy.Repository.Generic;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -52,9 +52,8 @@ namespace RestWithASPNET5Udemy
             //Injeção de dependencia
             //A injeção de dependecia instancia os métodos automaticamente e joga no construtor da classe que implementa essa interface
             services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
-            services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
             services.AddScoped<IBookBusiness, BookBusinessImplementation>();
-            services.AddScoped<IBookRepository, BookRepostoryImplementation>();
+            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
         }
 
         

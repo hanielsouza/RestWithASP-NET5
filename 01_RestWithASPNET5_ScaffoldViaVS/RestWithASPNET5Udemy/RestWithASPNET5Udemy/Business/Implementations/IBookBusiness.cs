@@ -1,4 +1,5 @@
 ﻿using RestWithASPNET5Udemy.Model;
+using RestWithASPNETUdemy.Data.VO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,13 @@ namespace RestWithASPNET5Udemy.Business.Implementations
 {
    public interface IBookBusiness
     {
-        Book Create(Book book);
+        BookVO Create(BookVO book);
 
-        Book FindByID(long id);
+        BookVO FindByID(long id);
 
-        List<Book> FindAll();
+        List<BookVO> FindAll();
 
-        Book Update(Book book);
+        BookVO Update(BookVO book);
 
         void Delete(long id);
 
