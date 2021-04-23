@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RestWithASPNET5Udemy.Business.Implementations;
+using RestWithASPNET5Udemy.Hypermedia.Filters;
 using RestWithASPNET5Udemy.Model;
 using RestWithASPNETUdemy.Data.VO;
 
@@ -22,18 +23,21 @@ namespace RestWithASPNET5Udemy.Controllers
         }
 
         [HttpGet]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Get()
         {
             return Ok(_bookBusiness.FindAll());
         }
 
         [HttpGet("{id}")]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Get(long id)
         {
             return Ok(_bookBusiness.FindByID(id));
         }
 
         [HttpPost]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Post([FromBody] BookVO book)
         {
 
@@ -42,6 +46,7 @@ namespace RestWithASPNET5Udemy.Controllers
         }
 
         [HttpPut]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Put([FromBody] BookVO book)
         {
 
