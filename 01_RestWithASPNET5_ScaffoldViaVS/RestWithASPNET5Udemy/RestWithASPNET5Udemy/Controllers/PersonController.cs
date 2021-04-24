@@ -4,6 +4,7 @@ using RestWithASPNET5Udemy.Model;
 using RestWithASPNET5Udemy.Business;
 using RestWithASPNET5Udemy.Data.VO;
 using RestWithASPNET5Udemy.Hypermedia.Filters;
+using System.Collections.Generic;
 
 namespace RestWithASPNET5Udemy.Controllers
 {
@@ -24,6 +25,11 @@ namespace RestWithASPNET5Udemy.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType((200),Type =typeof(List<PersonVO>))]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+
         [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Get()
         {
@@ -31,6 +37,10 @@ namespace RestWithASPNET5Udemy.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType((200), Type = typeof(PersonVO))]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Get(long id)
         {
@@ -40,6 +50,9 @@ namespace RestWithASPNET5Udemy.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType((200), Type = typeof(PersonVO))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Post([FromBody] PersonVO person)
         {
@@ -49,6 +62,9 @@ namespace RestWithASPNET5Udemy.Controllers
         }
 
         [HttpPut]
+        [ProducesResponseType((200), Type = typeof(List<PersonVO>))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Put([FromBody] PersonVO person)
         {
@@ -59,6 +75,10 @@ namespace RestWithASPNET5Udemy.Controllers
 
 
         [HttpDelete("{id}")]
+        //Customização do swagger
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public IActionResult Delete(long id)
         {
              _personBusiness.Delete(id);

@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using RestWithASPNET5Udemy.Business;
 using RestWithASPNET5Udemy.Business.Implementations;
 using RestWithASPNET5Udemy.Hypermedia.Enricher;
@@ -35,7 +37,7 @@ namespace RestWithASPNET5Udemy
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           
+
 
             services.AddControllers();
             //Adicionando a conexão com o banco
@@ -67,6 +69,23 @@ namespace RestWithASPNET5Udemy
             //Versionamento de API
             services.AddApiVersioning();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "REST API's from 0 to Azure with ASP.NET Core 5 and Docker ",
+                        Version = "v1",
+                        Description = "REST API's from 0 to Azure with ASP.NET Core 5 and Docker ",
+                        Contact = new OpenApiContact()
+                        {
+                            Name = "Haniel Sousa"
+                        }
+                    }
+                    );
+            });
+
+
             //Injeção de dependencia
             //A injeção de dependecia instancia os métodos automaticamente e joga no construtor da classe que implementa essa interface
             services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
@@ -74,7 +93,7 @@ namespace RestWithASPNET5Udemy
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
         }
 
-        
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -87,6 +106,18 @@ namespace RestWithASPNET5Udemy
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseSwagger();//Gera o Json com a documentação
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json",
+"REST API's from 0 to Azure with ASP.NET Core 5 and Docker - v1");
+            });//Gera a tela HTML
+
+            var option = new RewriteOptions();
+            option.AddRedirect("^$", "swagger");
+            app.UseRewriter(option);
 
             app.UseAuthorization();
 
