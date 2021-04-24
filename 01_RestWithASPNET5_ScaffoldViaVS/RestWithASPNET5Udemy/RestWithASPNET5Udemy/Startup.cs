@@ -38,6 +38,13 @@ namespace RestWithASPNET5Udemy
         public void ConfigureServices(IServiceCollection services)
         {
 
+            //habilitando cors
+            services.AddCors(options => options.AddDefaultPolicy(builder =>
+            {
+                builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+            }));
 
             services.AddControllers();
             //Adicionando a conexão com o banco
@@ -106,6 +113,10 @@ namespace RestWithASPNET5Udemy
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            //Habilita Cors
+            app.UseCors();
+
 
             app.UseSwagger();//Gera o Json com a documentação
 
