@@ -5,12 +5,14 @@ using RestWithASPNET5Udemy.Business;
 using RestWithASPNET5Udemy.Data.VO;
 using RestWithASPNET5Udemy.Hypermedia.Filters;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RestWithASPNET5Udemy.Controllers
 {
     [ApiVersion("1")]
     [ApiController]
     [Route("api/[controller]/v{Version:apiVersion}")]//pega a rota e junta com o valor parametrizado no anotation [ApiVersion("1")]
+    [Authorize("Bearer")]
     public class PersonController : ControllerBase
     {
 

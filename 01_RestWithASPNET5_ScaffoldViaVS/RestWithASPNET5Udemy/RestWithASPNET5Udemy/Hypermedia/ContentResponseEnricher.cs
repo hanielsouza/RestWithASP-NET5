@@ -28,6 +28,7 @@ namespace RestWithASPNET5Udemy.Hypermedia
         {
             if (response.Result is OkObjectResult okObjectResult)
             {
+                if(okObjectResult.Value!=null)
                 return CanEnrich(okObjectResult.Value.GetType());
             }
             return false;

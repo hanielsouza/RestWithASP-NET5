@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RestWithASPNET5Udemy.Business.Implementations;
 using RestWithASPNET5Udemy.Hypermedia.Filters;
@@ -12,6 +13,7 @@ namespace RestWithASPNET5Udemy.Controllers
     [ApiVersion("1")]
     [ApiController]
     [Route("api/[controller]/v{Version:apiVersion}")]
+    [Authorize("Bearer")]
     public class BookController : Controller
     {
         private readonly ILogger<PersonController> _logger;
@@ -33,7 +35,9 @@ namespace RestWithASPNET5Udemy.Controllers
         [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Get(long id)
         {
-            return Ok(_bookBusiness.FindByID(id));
+            var book = _bookBusiness.FindByID(id);
+            if (book == null) return NotFound();
+            return Ok(book);
         }
 
         [HttpPost]

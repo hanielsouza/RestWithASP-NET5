@@ -15,39 +15,45 @@ namespace RestWithASPNET5Udemy.Hypermedia.Enricher
 
         protected override Task EnrichModel(BookVO content, IUrlHelper urlHelper)
         {
-            var path = "api/book/v1";
-            string link = getLink(content.Id, urlHelper, path);
 
-            content.Links.Add(new HyperMediaLink()
-            {
-                Action = HttpActionVerb.GET,
-                Href = link,
-                Rel = RelationType.self,
-                Type = ResponseTypeformat.DefaultGet
-            });
-            content.Links.Add(new HyperMediaLink()
-            {
-                Action = HttpActionVerb.POST,
-                Href = link,
-                Rel = RelationType.self,
-                Type = ResponseTypeformat.DefaultPost
-            });
-            content.Links.Add(new HyperMediaLink()
-            {
-                Action = HttpActionVerb.PUT,
-                Href = link,
-                Rel = RelationType.self,
-                Type = ResponseTypeformat.DefaultPut
-            });
-            content.Links.Add(new HyperMediaLink()
-            {
-                Action = HttpActionVerb.DELETE,
-                Href = link,
-                Rel = RelationType.self,
-                Type = "int"
-            }); ;
-            return null;
+            
+                var path = "api/book/v1";
+                string link = getLink(content.Id, urlHelper, path);
+
+                content.Links.Add(new HyperMediaLink()
+                {
+                    Action = HttpActionVerb.GET,
+                    Href = link,
+                    Rel = RelationType.self,
+                    Type = ResponseTypeformat.DefaultGet
+                });
+                content.Links.Add(new HyperMediaLink()
+                {
+                    Action = HttpActionVerb.POST,
+                    Href = link,
+                    Rel = RelationType.self,
+                    Type = ResponseTypeformat.DefaultPost
+                });
+                content.Links.Add(new HyperMediaLink()
+                {
+                    Action = HttpActionVerb.PUT,
+                    Href = link,
+                    Rel = RelationType.self,
+                    Type = ResponseTypeformat.DefaultPut
+                });
+                content.Links.Add(new HyperMediaLink()
+                {
+                    Action = HttpActionVerb.DELETE,
+                    Href = link,
+                    Rel = RelationType.self,
+                    Type = "int"
+                });
+
+            
+
+                return new Task(new Action(()=> { }));
         }
+
 
         private string getLink(long id, IUrlHelper urlHelper, string path)
         {

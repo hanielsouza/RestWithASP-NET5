@@ -2,6 +2,7 @@
 
 namespace RestWithASPNET5Udemy.Model.Base
 {
+    //classe Base com o campo ID em comum para as tabelas que usarem
     public class BaseEntity
     {
 

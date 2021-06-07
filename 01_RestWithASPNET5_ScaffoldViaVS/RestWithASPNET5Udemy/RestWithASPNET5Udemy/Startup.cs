@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Rewrite;
@@ -5,18 +7,24 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using RestWithASPNET5Udemy.Business;
 using RestWithASPNET5Udemy.Business.Implementations;
+using RestWithASPNET5Udemy.Configurations;
 using RestWithASPNET5Udemy.Hypermedia.Enricher;
 using RestWithASPNET5Udemy.Hypermedia.Filters;
 using RestWithASPNET5Udemy.Model.context;
 using RestWithASPNET5Udemy.Repository;
 using RestWithASPNET5Udemy.Repository.Generic;
+using RestWithASPNET5Udemy.Services;
+using RestWithASPNET5Udemy.Services.Implementations;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace RestWithASPNET5Udemy
 {
@@ -37,7 +45,6 @@ namespace RestWithASPNET5Udemy
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             //habilitando cors
             services.AddCors(options => options.AddDefaultPolicy(builder =>
             {
@@ -45,6 +52,40 @@ namespace RestWithASPNET5Udemy
                         .AllowAnyMethod()
                         .AllowAnyHeader();
             }));
+
+            //Configuração de segurança do Token
+            var tokenConfigurations = new TokenConfiguration();
+
+            new ConfigureFromConfigurationOptions<TokenConfiguration>(
+                Configuration.GetSection("TokenConfiguration")//objeto do Json no appsettings
+                ).Configure(tokenConfigurations);
+
+            services.AddSingleton(tokenConfigurations);
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = tokenConfigurations.Issuer,
+                ValidAudience = tokenConfigurations.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfigurations.Secret))
+            });
+
+
+            services.AddAuthorization(auth =>
+            auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+            .RequireAuthenticatedUser().Build())
+            );
+
+
 
             services.AddControllers();
             //Adicionando a conexão com o banco
@@ -97,6 +138,12 @@ namespace RestWithASPNET5Udemy
             //A injeção de dependecia instancia os métodos automaticamente e joga no construtor da classe que implementa essa interface
             services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
             services.AddScoped<IBookBusiness, BookBusinessImplementation>();
+            services.AddScoped<ILoginBusiness, LoginBusinessImplementation>();
+
+            services.AddTransient<ITokenService, TokenService>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
+
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
         }
 
