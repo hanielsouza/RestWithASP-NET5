@@ -60,8 +60,10 @@ namespace RestWithASPNET5Udemy
                 Configuration.GetSection("TokenConfiguration")//objeto do Json no appsettings
                 ).Configure(tokenConfigurations);
 
+            //Injeção de dependência
             services.AddSingleton(tokenConfigurations);
 
+            //Configuração de Autenticação
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -78,7 +80,7 @@ namespace RestWithASPNET5Udemy
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfigurations.Secret))
             });
 
-
+            //Configuração de Autorização
             services.AddAuthorization(auth =>
             auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
             .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
@@ -91,13 +93,14 @@ namespace RestWithASPNET5Udemy
             //Adicionando a conexão com o banco
             //buscar a string de conexão no appsettings.json
             var connection = Configuration["MySQLConnection:MySQLConnectionString"];
+            //seta a conexão pelo MySQL e passa para o contexto
+            services.AddDbContext<MySqlContext>(options => options.UseMySql(connection));
 
             if (Environment.IsDevelopment())
             {
                 MigrateDataBase(connection);
             }
-            //seta a conexão pelo MySQL e passa para o contexto
-            services.AddDbContext<MySqlContext>(options => options.UseMySql(connection));
+
 
 
             services.AddMvc(options =>
@@ -143,6 +146,8 @@ namespace RestWithASPNET5Udemy
             services.AddTransient<ITokenService, TokenService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<IPersonRepository, PersonRepository>();
 
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
         }

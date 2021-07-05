@@ -62,9 +62,6 @@ namespace RestWithASPNET5Udemy.Repository
             return result;
         }
 
-
-        
-
         private string ComputeHash(string input, SHA256CryptoServiceProvider algorithm)
         {
             Byte[] inputBytes = Encoding.UTF8.GetBytes(input);
