@@ -19,5 +19,11 @@ namespace RestWithASPNET5Udemy.Repository
         void Delete(long id);
 
         bool Existis(long id);
+
+        List<T> FindWithPagedSearch(string query);
+
+        int GetCount(string query);
+
+
     }
 }
