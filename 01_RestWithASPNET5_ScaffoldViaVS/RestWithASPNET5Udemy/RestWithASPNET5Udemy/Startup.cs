@@ -97,10 +97,10 @@ namespace RestWithASPNET5Udemy
             //seta a conexão pelo MySQL e passa para o contexto
             services.AddDbContext<MySqlContext>(options => options.UseMySql(connection));
 
-            if (Environment.IsDevelopment())
-            {
-                MigrateDataBase(connection);
-            }
+            //if (Environment.IsDevelopment())
+            //{
+            //    MigrateDataBase(connection);
+            //}
 
 
 
